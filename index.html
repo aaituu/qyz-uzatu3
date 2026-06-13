@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nazerke — Қыз Ұзату</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;1,400&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #FAF6F0;
+    --cream-dark: #F2EAE0;
+    --blush: #E8C4B8;
+    --blush-light: #F0D4CB;
+    --rose: #C9897A;
+    --rose-deep: #B06A5A;
+    --burgundy: #6B2D3E;
+    --burgundy-light: #8B3D50;
+    --gold: #C4A882;
+    --gold-light: #DFC5A0;
+    --text-main: #5A2030;
+    --text-soft: #8B5060;
+    --ornament: rgba(176,106,90,0.18);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--text-main);
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg width='120' height='120' viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='60' cy='60' r='40' fill='none' stroke='%23C9897A' stroke-width='0.4' stroke-opacity='0.12'/%3E%3Ccircle cx='60' cy='60' r='25' fill='none' stroke='%23C9897A' stroke-width='0.4' stroke-opacity='0.1'/%3E%3Cpath d='M60 20 Q80 40 60 60 Q40 40 60 20Z' fill='none' stroke='%23C9897A' stroke-width='0.35' stroke-opacity='0.09'/%3E%3Cpath d='M60 100 Q80 80 60 60 Q40 80 60 100Z' fill='none' stroke='%23C9897A' stroke-width='0.35' stroke-opacity='0.09'/%3E%3Cpath d='M20 60 Q40 80 60 60 Q40 40 20 60Z' fill='none' stroke='%23C9897A' stroke-width='0.35' stroke-opacity='0.09'/%3E%3Cpath d='M100 60 Q80 80 60 60 Q80 40 100 60Z' fill='none' stroke='%23C9897A' stroke-width='0.35' stroke-opacity='0.09'/%3E%3C/svg%3E");
+    background-size: 120px 120px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  /* ── MUSIC BUTTON ── */
+  #music-btn {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 999;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    border: 1.5px solid var(--rose);
+    background: rgba(250,246,240,0.92);
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 2px;
+    box-shadow: 0 2px 16px rgba(176,106,90,0.15);
+    transition: transform 0.2s;
+  }
+  #music-btn:hover { transform: scale(1.06); }
+  #music-btn svg { width: 20px; height: 20px; }
+  #music-btn span { font-family: 'Montserrat', sans-serif; font-size: 7px; letter-spacing: 0.08em; color: var(--burgundy); text-transform: uppercase; line-height: 1; }
+
+  /* ── LANG SWITCHER ── */
+  #lang-switcher {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 999;
+    display: flex;
+    gap: 0;
+    border: 1.5px solid var(--rose);
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(250,246,240,0.92);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 16px rgba(176,106,90,0.12);
+  }
+  .lang-btn {
+    padding: 7px 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    color: var(--text-soft);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .lang-btn.active { background: var(--rose); color: #fff; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 100px 20px 80px;
+    text-align: center;
+  }
+
+  #hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(232,196,184,0.35) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 40% at 70% 80%, rgba(201,137,122,0.2) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .hero-name {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(72px, 18vw, 120px);
+    color: var(--burgundy);
+    line-height: 1;
+    opacity: 0;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 2px 30px rgba(107,45,62,0.15);
+  }
+  .hero-event {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(11px, 3vw, 14px);
+    letter-spacing: 0.35em;
+    color: var(--rose-deep);
+    text-transform: uppercase;
+    margin-top: 10px;
+    opacity: 0;
+    position: relative; z-index: 2;
+  }
+  .hero-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 4vw, 22px);
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: var(--text-soft);
+    margin-top: 14px;
+    opacity: 0;
+    position: relative; z-index: 2;
+  }
+  .hero-divider {
+    width: 80px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--rose), transparent);
+    margin: 22px auto;
+    opacity: 0;
+    position: relative; z-index: 2;
+  }
+
+  /* ── SVG FLORAL DECORATIONS ── */
+  .floral-svg {
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .floral-svg path, .floral-svg circle, .floral-svg ellipse, .floral-svg line {
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* ── SECTION BASE ── */
+  section {
+    position: relative;
+    z-index: 2;
+    padding: 80px 20px;
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .section-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(38px, 10vw, 56px);
+    color: var(--burgundy);
+    margin-bottom: 24px;
+    line-height: 1.2;
+  }
+  .section-subtitle {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--rose);
+    margin-bottom: 32px;
+  }
+
+  /* ── INVITATION TEXT ── */
+  #invitation { background: transparent; }
+  .inv-heading {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--rose-deep);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .inv-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 4vw, 19px);
+    font-weight: 300;
+    line-height: 1.9;
+    color: var(--text-main);
+    font-style: italic;
+  }
+  .inv-text strong { font-style: normal; font-weight: 600; color: var(--burgundy); }
+  .inv-para { margin-bottom: 20px; }
+  .inv-ornament {
+    width: 120px; height: 120px;
+    margin: 0 auto 28px;
+    opacity: 0;
+  }
+
+  /* ── CALENDAR ── */
+  #calendar-section { }
+  .event-datetime {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(20px, 5vw, 26px);
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: var(--text-main);
+    margin-bottom: 36px;
+    line-height: 1.5;
+  }
+  .event-datetime strong { display: block; font-size: 1.3em; color: var(--burgundy); font-weight: 400; letter-spacing: 0.15em; }
+
+  .calendar-wrap {
+    background: rgba(250,246,240,0.8);
+    border: 1px solid rgba(201,137,122,0.25);
+    border-radius: 16px;
+    padding: 28px 24px;
+    box-shadow: 0 4px 40px rgba(176,106,90,0.1);
+    backdrop-filter: blur(4px);
+  }
+  .cal-month {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--rose-deep);
+    margin-bottom: 16px;
+  }
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+  .cal-day-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--text-soft);
+    text-align: center;
+    padding: 4px 0;
+    text-transform: uppercase;
+  }
+  .cal-day {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    text-align: center;
+    padding: 6px 4px;
+    color: var(--text-main);
+    border-radius: 50%;
+    position: relative;
+    cursor: default;
+  }
+  .cal-day.empty { }
+  .cal-day.special {
+    background: var(--rose);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 2px 12px rgba(176,106,90,0.35);
+  }
+  .cal-day.special::after {
+    content: '♥';
+    position: absolute;
+    top: -8px; right: -6px;
+    font-size: 10px;
+    color: var(--burgundy);
+  }
+
+  /* ── VENUE ── */
+  #venue { }
+  .venue-name {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(18px, 5vw, 24px);
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--burgundy);
+    margin-bottom: 28px;
+  }
+  .map-btn {
+    display: inline-block;
+    padding: 14px 36px;
+    border: 1.5px solid var(--rose);
+    border-radius: 30px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--burgundy);
+    text-decoration: none;
+    background: transparent;
+    transition: all 0.3s;
+  }
+  .map-btn:hover { background: var(--rose); color: #fff; border-color: var(--rose); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(176,106,90,0.3); }
+
+  /* ── COUNTDOWN ── */
+  #countdown { }
+  .countdown-wrap {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .cd-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .cd-circle {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 1.5px solid var(--rose);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(250,246,240,0.85);
+    box-shadow: 0 2px 16px rgba(176,106,90,0.12);
+    position: relative;
+  }
+  .cd-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--burgundy);
+    line-height: 1;
+  }
+  .cd-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 8px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+  }
+  .cd-sep {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--rose);
+    margin-bottom: 20px;
+    opacity: 0.6;
+  }
+
+  /* ── RSVP ── */
+  #rsvp { }
+  .rsvp-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(15px, 3.5vw, 17px);
+    font-style: italic;
+    color: var(--text-soft);
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+  .rsvp-form { text-align: left; }
+  .form-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rose-deep);
+    display: block;
+    margin-bottom: 8px;
+  }
+  .form-input {
+    width: 100%;
+    padding: 13px 18px;
+    border: 1px solid rgba(201,137,122,0.4);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.7);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .form-input:focus { border-color: var(--rose); box-shadow: 0 0 0 3px rgba(201,137,122,0.12); }
+  .options-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--rose-deep);
+    display: block;
+    margin-bottom: 14px;
+  }
+  .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+  .radio-option input[type=radio] { display: none; }
+  .radio-custom {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid var(--rose);
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .radio-option input:checked + .radio-custom { background: var(--rose); border-color: var(--rose); }
+  .radio-option input:checked + .radio-custom::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #fff;
+  }
+  .radio-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    color: var(--text-main);
+    font-style: italic;
+  }
+  .submit-btn {
+    width: 100%;
+    margin-top: 24px;
+    padding: 15px;
+    background: var(--rose);
+    border: none;
+    border-radius: 30px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 20px rgba(176,106,90,0.3);
+  }
+  .submit-btn:hover { background: var(--rose-deep); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(176,106,90,0.4); }
+
+  /* ── MODAL ── */
+  #modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(107,45,62,0.35);
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+  }
+  #modal.show { display: flex; }
+  .modal-box {
+    background: var(--cream);
+    border: 1px solid rgba(201,137,122,0.3);
+    border-radius: 20px;
+    padding: 48px 40px;
+    max-width: 340px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(107,45,62,0.2);
+    position: relative;
+  }
+  .modal-icon { font-size: 40px; margin-bottom: 16px; }
+  .modal-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 36px;
+    color: var(--burgundy);
+    margin-bottom: 10px;
+  }
+  .modal-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--text-soft);
+    line-height: 1.6;
+  }
+  .modal-close {
+    margin-top: 24px;
+    padding: 10px 32px;
+    border: 1.5px solid var(--rose);
+    border-radius: 20px;
+    background: transparent;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--burgundy);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { background: var(--rose); color: #fff; }
+
+  /* ── FINAL ── */
+  #final {
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 30px 100px;
+    position: relative;
+    overflow: hidden;
+  }
+  .final-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(11px, 3vw, 13px);
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--rose-deep);
+    line-height: 2;
+  }
+  .final-glow {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(232,196,184,0.4) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .section-wrap {
+    position: relative;
+    overflow: visible;
+  }
+
+  /* ── FADE IN ELEMENTS ── */
+  .fade-up { opacity: 0; transform: translateY(30px); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 480px) {
+    section { padding: 60px 20px; }
+    .cd-circle { width: 60px; height: 60px; }
+    .cd-num { font-size: 22px; }
+    .cd-sep { font-size: 22px; }
+    .modal-box { padding: 36px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MUSIC BUTTON -->
+<button id="music-btn" onclick="toggleMusic()" title="Музыка">
+  <svg id="music-icon" viewBox="0 0 24 24" fill="none" stroke="#6B2D3E" stroke-width="1.5" stroke-linecap="round">
+    <polygon points="5,3 19,12 5,21" fill="#C9897A" stroke="none"/>
+  </svg>
+  <span id="music-label">Қосу</span>
+</button>
+<audio id="bg-music" loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+</audio>
+
+<!-- LANG SWITCHER -->
+<div id="lang-switcher">
+  <button class="lang-btn active" onclick="setLang('kk')">ҚАЗ</button>
+  <button class="lang-btn" onclick="setLang('ru')">РУС</button>
+</div>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section id="hero">
+
+  <!-- Top Left Floral -->
+  <svg class="floral-svg" style="top:-10px;left:-10px;width:220px;height:220px;" viewBox="0 0 220 220">
+    <!-- main branch -->
+    <path id="b1" d="M10,210 Q40,160 80,120 Q110,90 130,50" fill="none" stroke="#C9897A" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- side twigs -->
+    <path id="b2" d="M55,155 Q70,135 90,130" fill="none" stroke="#C9897A" stroke-width="1" stroke-linecap="round"/>
+    <path id="b3" d="M80,120 Q100,100 115,95" fill="none" stroke="#C9897A" stroke-width="1" stroke-linecap="round"/>
+    <path id="b4" d="M105,85 Q120,65 135,60" fill="none" stroke="#C9897A" stroke-width="1" stroke-linecap="round"/>
+    <!-- leaves -->
+    <ellipse id="l1" cx="92" cy="128" rx="8" ry="4" fill="#D4A090" opacity="0.7" transform="rotate(-40,92,128)"/>
+    <ellipse id="l2" cx="117" cy="93" rx="8" ry="4" fill="#D4A090" opacity="0.7" transform="rotate(-55,117,93)"/>
+    <ellipse id="l3" cx="137" cy="58" rx="7" ry="3.5" fill="#D4A090" opacity="0.6" transform="rotate(-65,137,58)"/>
+    <!-- small flowers -->
+    <g id="f1" transform="translate(90,130)" style="transform-origin:0px 0px">
+      <circle cx="0" cy="-12" r="4" fill="#E8C4B8" opacity="0.9"/>
+      <circle cx="4" cy="-9" r="3.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="4" cy="-15" r="3.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="-4" cy="-9" r="3.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="-4" cy="-15" r="3.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="0" cy="-12" r="2" fill="#C9897A"/>
+    </g>
+    <g id="f2" transform="translate(130,50)" style="transform-origin:0px 0px">
+      <circle cx="0" cy="-10" r="3.5" fill="#F0D4CB" opacity="0.9"/>
+      <circle cx="3.5" cy="-7" r="3" fill="#F0D4CB" opacity="0.85"/>
+      <circle cx="3.5" cy="-13" r="3" fill="#F0D4CB" opacity="0.85"/>
+      <circle cx="-3.5" cy="-7" r="3" fill="#F0D4CB" opacity="0.85"/>
+      <circle cx="-3.5" cy="-13" r="3" fill="#F0D4CB" opacity="0.85"/>
+      <circle cx="0" cy="-10" r="1.8" fill="#B06A5A"/>
+    </g>
+    <g id="f3" transform="translate(57,153)" style="transform-origin:0px 0px">
+      <circle cx="0" cy="-8" r="3" fill="#E8C4B8" opacity="0.9"/>
+      <circle cx="3" cy="-5.5" r="2.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="3" cy="-10.5" r="2.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="-3" cy="-5.5" r="2.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="-3" cy="-10.5" r="2.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="0" cy="-8" r="1.5" fill="#C9897A"/>
+    </g>
+    <!-- buds -->
+    <ellipse id="bd1" cx="118" cy="92" rx="3" ry="5" fill="#E8C4B8" opacity="0" transform="rotate(-60,118,92)"/>
+    <ellipse id="bd2" cx="60" cy="140" rx="2.5" ry="4" fill="#F0D4CB" opacity="0" transform="rotate(-50,60,140)"/>
+  </svg>
+
+  <!-- Top Right Floral -->
+  <svg class="floral-svg" style="top:-10px;right:-10px;width:220px;height:220px;" viewBox="0 0 220 220">
+    <path id="br1" d="M210,210 Q180,160 140,120 Q110,90 90,50" fill="none" stroke="#C9897A" stroke-width="1.5" stroke-linecap="round"/>
+    <path id="br2" d="M165,155 Q150,135 130,130" fill="none" stroke="#C9897A" stroke-width="1" stroke-linecap="round"/>
+    <path id="br3" d="M140,120 Q120,100 105,95" fill="none" stroke="#C9897A" stroke-width="1" stroke-linecap="round"/>
+    <ellipse cx="128" cy="128" rx="8" ry="4" fill="#D4A090" opacity="0.7" transform="rotate(40,128,128)"/>
+    <ellipse cx="103" cy="93" rx="8" ry="4" fill="#D4A090" opacity="0.7" transform="rotate(55,103,93)"/>
+    <g transform="translate(130,130)" style="transform-origin:0px 0px">
+      <circle cx="0" cy="-12" r="4" fill="#E8C4B8" opacity="0.9"/>
+      <circle cx="4" cy="-9" r="3.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="4" cy="-15" r="3.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="-4" cy="-9" r="3.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="-4" cy="-15" r="3.5" fill="#E8C4B8" opacity="0.85"/>
+      <circle cx="0" cy="-12" r="2" fill="#C9897A"/>
+    </g>
+    <g transform="translate(90,50)" style="transform-origin:0px 0px">
+      <circle cx="0" cy="-10" r="3.5" fill="#F0D4CB" opacity="0.9"/>
+      <circle cx="3.5" cy="-7" r="3" fill="#F0D4CB" opacity="0.85"/>
+      <circle cx="3.5" cy="-13" r="3" fill="#F0D4CB" opacity="0.85"/>
+      <circle cx="-3.5" cy="-7" r="3" fill="#F0D4CB" opacity="0.85"/>
+      <circle cx="-3.5" cy="-13" r="3" fill="#F0D4CB" opacity="0.85"/>
+      <circle cx="0" cy="-10" r="1.8" fill="#B06A5A"/>
+    </g>
+  </svg>
+
+  <div class="hero-name" id="hero-name">Nazerke</div>
+  <div class="hero-event" id="hero-event">
+    <span class="kk">Қыз Ұзату</span>
+    <span class="ru" style="display:none">Қыз Ұзату</span>
+  </div>
+  <div class="hero-divider"></div>
+  <div class="hero-date" id="hero-date">08.09.2026</div>
+</section>
+
+<!-- ══════════════ DIVIDER FLORAL ══════════════ -->
+<div class="section-wrap" style="position:relative;height:120px;overflow:visible;">
+  <svg style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(500px,100%);height:100px;" viewBox="0 0 500 100">
+    <path class="scroll-branch" d="M50,50 Q150,20 250,50 Q350,80 450,50" fill="none" stroke="#C9897A" stroke-width="1" stroke-dasharray="500" stroke-dashoffset="500"/>
+    <g transform="translate(250,50)">
+      <circle cx="0" cy="-8" r="3" fill="#E8C4B8"/><circle cx="3" cy="-5" r="2.5" fill="#E8C4B8"/><circle cx="-3" cy="-5" r="2.5" fill="#E8C4B8"/><circle cx="0" cy="-8" r="1.2" fill="#C9897A"/>
+    </g>
+    <ellipse cx="150" cy="35" rx="7" ry="3" fill="#D4A090" opacity="0.6" transform="rotate(-20,150,35)"/>
+    <ellipse cx="350" cy="65" rx="7" ry="3" fill="#D4A090" opacity="0.6" transform="rotate(20,350,65)"/>
+  </svg>
+</div>
+
+<!-- ══════════════ INVITATION TEXT ══════════════ -->
+<div class="section-wrap">
+  <!-- Side florals -->
+  <svg class="floral-svg" style="left:-15px;top:0;width:100px;height:300px;" viewBox="0 0 100 300">
+    <path class="scroll-branch" d="M20,280 Q30,220 50,160 Q65,110 55,60" fill="none" stroke="#C9897A" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="300" stroke-dashoffset="300"/>
+    <ellipse cx="52" cy="155" rx="7" ry="3" fill="#D4A090" opacity="0.65" transform="rotate(-30,52,155)"/>
+    <ellipse cx="56" cy="100" rx="6" ry="3" fill="#D4A090" opacity="0.6" transform="rotate(-45,56,100)"/>
+    <g class="scroll-flower" transform="translate(50,155)">
+      <circle cx="0" cy="-10" r="3.5" fill="#E8C4B8" opacity="0.9"/><circle cx="3" cy="-7" r="3" fill="#E8C4B8" opacity="0.85"/><circle cx="-3" cy="-7" r="3" fill="#E8C4B8" opacity="0.85"/><circle cx="3" cy="-13" r="3" fill="#E8C4B8" opacity="0.85"/><circle cx="-3" cy="-13" r="3" fill="#E8C4B8" opacity="0.85"/><circle cx="0" cy="-10" r="1.5" fill="#C9897A"/>
+    </g>
+  </svg>
+  <svg class="floral-svg" style="right:-15px;top:0;width:100px;height:300px;" viewBox="0 0 100 300">
+    <path class="scroll-branch" d="M80,280 Q70,220 50,160 Q35,110 45,60" fill="none" stroke="#C9897A" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="300" stroke-dashoffset="300"/>
+    <ellipse cx="48" cy="155" rx="7" ry="3" fill="#D4A090" opacity="0.65" transform="rotate(30,48,155)"/>
+    <g class="scroll-flower" transform="translate(50,100)">
+      <circle cx="0" cy="-10" r="3.5" fill="#F0D4CB" opacity="0.9"/><circle cx="3" cy="-7" r="3" fill="#F0D4CB" opacity="0.85"/><circle cx="-3" cy="-7" r="3" fill="#F0D4CB" opacity="0.85"/><circle cx="3" cy="-13" r="3" fill="#F0D4CB" opacity="0.85"/><circle cx="-3" cy="-13" r="3" fill="#F0D4CB" opacity="0.85"/><circle cx="0" cy="-10" r="1.5" fill="#B06A5A"/>
+    </g>
+  </svg>
+
+  <section id="invitation">
+    <!-- Kazakh Ornament -->
+    <svg class="inv-ornament" viewBox="0 0 120 120">
+      <circle cx="60" cy="60" r="50" fill="none" stroke="#C9897A" stroke-width="1" opacity="0.5"/>
+      <circle cx="60" cy="60" r="35" fill="none" stroke="#C9897A" stroke-width="0.8" opacity="0.4"/>
+      <path d="M60,10 Q75,35 60,60 Q45,35 60,10Z" fill="#E8C4B8" opacity="0.4"/>
+      <path d="M60,110 Q75,85 60,60 Q45,85 60,110Z" fill="#E8C4B8" opacity="0.4"/>
+      <path d="M10,60 Q35,75 60,60 Q35,45 10,60Z" fill="#E8C4B8" opacity="0.4"/>
+      <path d="M110,60 Q85,75 60,60 Q85,45 110,60Z" fill="#E8C4B8" opacity="0.4"/>
+      <path d="M60,10 Q85,35 110,60 Q85,85 60,110 Q35,85 10,60 Q35,35 60,10Z" fill="none" stroke="#C9897A" stroke-width="0.6" opacity="0.35"/>
+      <circle cx="60" cy="60" r="8" fill="#E8C4B8" opacity="0.6"/>
+      <circle cx="60" cy="60" r="4" fill="#C9897A" opacity="0.5"/>
+    </svg>
+
+    <div class="inv-heading fade-up">
+      <span class="kk">Құрметті қонақтар!</span>
+      <span class="ru" style="display:none">Уважаемые гости!</span>
+    </div>
+    <div class="inv-text">
+      <p class="inv-para kk fade-up">
+        Ата-ананың аяулысы, бауырдың қадірлісі,<br>
+        үйдің шуақты гүлі болған <strong>Nazerke</strong> қызымыз<br>
+        жаңа өмірге қадам басқалы тұр.
+      </p>
+      <p class="inv-para ru fade-up" style="display:none">
+        Любимица родителей, гордость братьев и сестёр,<br>
+        солнечный цветок нашего дома — <strong>Nazerke</strong><br>
+        делает свой первый шаг в новую жизнь.
+      </p>
+      <p class="inv-para kk fade-up">
+        Бұл — біздің жанұямыз үшін ерекше әрі толқынысқа толы сәт.<br>
+        Сіздерді ақ тілегімізбен қуанышымызға ортақ болуға шақырамыз.
+      </p>
+      <p class="inv-para ru fade-up" style="display:none">
+        Это особенный и трогательный момент для нашей семьи.<br>
+        Приглашаем вас разделить нашу радость и благословить молодых.
+      </p>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════ CALENDAR FLORAL DIVIDER ══════════════ -->
+<div class="section-wrap" style="position:relative;overflow:visible;">
+  <svg style="position:absolute;left:50%;top:-40px;transform:translateX(-50%);width:min(460px,95%);height:80px;" viewBox="0 0 460 80">
+    <path class="scroll-branch" d="M30,40 Q115,10 230,40 Q345,70 430,40" fill="none" stroke="#C9897A" stroke-width="1" stroke-dasharray="470" stroke-dashoffset="470"/>
+    <g transform="translate(230,40)"><circle cx="0" cy="0" r="5" fill="#E8C4B8" opacity="0.8"/><circle cx="0" cy="0" r="2.5" fill="#C9897A" opacity="0.7"/></g>
+    <g transform="translate(115,14)"><circle cx="0" cy="0" r="3.5" fill="#F0D4CB" opacity="0.8"/><circle cx="0" cy="0" r="1.5" fill="#C9897A"/></g>
+    <g transform="translate(345,66)"><circle cx="0" cy="0" r="3.5" fill="#F0D4CB" opacity="0.8"/><circle cx="0" cy="0" r="1.5" fill="#C9897A"/></g>
+    <ellipse cx="175" cy="25" rx="6" ry="2.5" fill="#D4A090" opacity="0.55" transform="rotate(-15,175,25)"/>
+    <ellipse cx="285" cy="55" rx="6" ry="2.5" fill="#D4A090" opacity="0.55" transform="rotate(15,285,55)"/>
+  </svg>
+
+  <section id="calendar-section">
+    <div class="section-title fade-up kk">Той салтанаты</div>
+    <div class="section-title fade-up ru" style="display:none">Той салтанаты</div>
+
+    <div class="event-datetime fade-up">
+      <strong class="kk">08 Қыркүйек 2026 жыл</strong>
+      <strong class="ru" style="display:none">08 Сентября 2026 года</strong>
+      <span class="kk">Сағат 19:00</span>
+      <span class="ru" style="display:none">В 19:00</span>
+    </div>
+
+    <!-- Calendar September 2026 -->
+    <div class="calendar-wrap fade-up">
+      <div class="cal-month kk">Қыркүйек 2026</div>
+      <div class="cal-month ru" style="display:none">Сентябрь 2026</div>
+      <div class="cal-grid">
+        <div class="cal-day-name">Дс</div>
+        <div class="cal-day-name">Сс</div>
+        <div class="cal-day-name">Ср</div>
+        <div class="cal-day-name">Бс</div>
+        <div class="cal-day-name">Жм</div>
+        <div class="cal-day-name">Сб</div>
+        <div class="cal-day-name">Жк</div>
+        <!-- Sep 2026: starts Tuesday (day 2 in Mon-first) -->
+        <div class="cal-day empty"></div>
+        <div class="cal-day">1</div>
+        <div class="cal-day">2</div>
+        <div class="cal-day">3</div>
+        <div class="cal-day">4</div>
+        <div class="cal-day">5</div>
+        <div class="cal-day">6</div>
+        <div class="cal-day">7</div>
+        <div class="cal-day special">8</div>
+        <div class="cal-day">9</div>
+        <div class="cal-day">10</div>
+        <div class="cal-day">11</div>
+        <div class="cal-day">12</div>
+        <div class="cal-day">13</div>
+        <div class="cal-day">14</div>
+        <div class="cal-day">15</div>
+        <div class="cal-day">16</div>
+        <div class="cal-day">17</div>
+        <div class="cal-day">18</div>
+        <div class="cal-day">19</div>
+        <div class="cal-day">20</div>
+        <div class="cal-day">21</div>
+        <div class="cal-day">22</div>
+        <div class="cal-day">23</div>
+        <div class="cal-day">24</div>
+        <div class="cal-day">25</div>
+        <div class="cal-day">26</div>
+        <div class="cal-day">27</div>
+        <div class="cal-day">28</div>
+        <div class="cal-day">29</div>
+        <div class="cal-day">30</div>
+        <div class="cal-day empty"></div>
+        <div class="cal-day empty"></div>
+        <div class="cal-day empty"></div>
+        <div class="cal-day empty"></div>
+        <div class="cal-day empty"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════ VENUE ══════════════ -->
+<div class="section-wrap" style="position:relative;overflow:visible;">
+  <!-- Corner florals for venue -->
+  <svg class="floral-svg" style="left:-10px;bottom:-20px;width:150px;height:150px;" viewBox="0 0 150 150">
+    <path class="scroll-branch" d="M10,140 Q40,100 80,70 Q110,48 120,20" fill="none" stroke="#C9897A" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="200" stroke-dashoffset="200"/>
+    <ellipse cx="78" cy="72" rx="7" ry="3" fill="#D4A090" opacity="0.65" transform="rotate(-40,78,72)"/>
+    <g class="scroll-flower" transform="translate(78,68)">
+      <circle cx="0" cy="-10" r="3.5" fill="#E8C4B8"/><circle cx="3" cy="-7" r="3" fill="#E8C4B8"/><circle cx="-3" cy="-7" r="3" fill="#E8C4B8"/><circle cx="3" cy="-13" r="3" fill="#E8C4B8"/><circle cx="-3" cy="-13" r="3" fill="#E8C4B8"/><circle cx="0" cy="-10" r="1.5" fill="#C9897A"/>
+    </g>
+    <g class="scroll-flower" transform="translate(120,20)">
+      <circle cx="0" cy="-8" r="3" fill="#F0D4CB"/><circle cx="2.5" cy="-6" r="2.5" fill="#F0D4CB"/><circle cx="-2.5" cy="-6" r="2.5" fill="#F0D4CB"/><circle cx="2.5" cy="-10" r="2.5" fill="#F0D4CB"/><circle cx="-2.5" cy="-10" r="2.5" fill="#F0D4CB"/><circle cx="0" cy="-8" r="1.2" fill="#B06A5A"/>
+    </g>
+  </svg>
+  <svg class="floral-svg" style="right:-10px;bottom:-20px;width:150px;height:150px;" viewBox="0 0 150 150">
+    <path class="scroll-branch" d="M140,140 Q110,100 70,70 Q40,48 30,20" fill="none" stroke="#C9897A" stroke-width="1.3" stroke-linecap="round" stroke-dasharray="200" stroke-dashoffset="200"/>
+    <ellipse cx="72" cy="72" rx="7" ry="3" fill="#D4A090" opacity="0.65" transform="rotate(40,72,72)"/>
+    <g class="scroll-flower" transform="translate(72,68)">
+      <circle cx="0" cy="-10" r="3.5" fill="#E8C4B8"/><circle cx="3" cy="-7" r="3" fill="#E8C4B8"/><circle cx="-3" cy="-7" r="3" fill="#E8C4B8"/><circle cx="3" cy="-13" r="3" fill="#E8C4B8"/><circle cx="-3" cy="-13" r="3" fill="#E8C4B8"/><circle cx="0" cy="-10" r="1.5" fill="#C9897A"/>
+    </g>
+  </svg>
+
+  <section id="venue">
+    <!-- Ornament -->
+    <svg style="width:80px;height:80px;margin:0 auto 20px;display:block;opacity:0.55;" viewBox="0 0 80 80">
+      <circle cx="40" cy="40" r="35" fill="none" stroke="#C9897A" stroke-width="0.8"/>
+      <path d="M40,5 Q55,22 40,40 Q25,22 40,5Z" fill="#E8C4B8" opacity="0.5"/>
+      <path d="M40,75 Q55,58 40,40 Q25,58 40,75Z" fill="#E8C4B8" opacity="0.5"/>
+      <path d="M5,40 Q22,55 40,40 Q22,25 5,40Z" fill="#E8C4B8" opacity="0.5"/>
+      <path d="M75,40 Q58,55 40,40 Q58,25 75,40Z" fill="#E8C4B8" opacity="0.5"/>
+      <circle cx="40" cy="40" r="6" fill="#E8C4B8" opacity="0.6"/>
+      <circle cx="40" cy="40" r="3" fill="#C9897A" opacity="0.5"/>
+    </svg>
+
+    <div class="section-subtitle fade-up kk">Мекен-жайымыз:</div>
+    <div class="section-subtitle fade-up ru" style="display:none">Место проведения:</div>
+    <div class="venue-name fade-up">Aq Tilek Restaurant</div>
+    <a href="https://2gis.kz/shymkent/geo/70000001091686020" target="_blank" class="map-btn fade-up kk">Картадан қарау</a>
+    <a href="https://2gis.kz/shymkent/geo/70000001091686020" target="_blank" class="map-btn fade-up ru" style="display:none">Посмотреть на карте</a>
+  </section>
+</div>
+
+<!-- ══════════════ FLORAL DIVIDER ══════════════ -->
+<div style="position:relative;height:100px;overflow:visible;">
+  <svg style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(400px,90%);height:80px;" viewBox="0 0 400 80">
+    <path class="scroll-branch" d="M20,40 Q100,10 200,40 Q300,70 380,40" fill="none" stroke="#C9897A" stroke-width="1" stroke-dasharray="420" stroke-dashoffset="420"/>
+    <g transform="translate(200,40)"><circle cx="0" cy="0" r="5" fill="#E8C4B8" opacity="0.8"/><circle cx="0" cy="0" r="2.5" fill="#C9897A" opacity="0.7"/></g>
+    <ellipse cx="100" cy="15" rx="6" ry="2.5" fill="#D4A090" opacity="0.55" transform="rotate(-15,100,15)"/>
+    <ellipse cx="300" cy="65" rx="6" ry="2.5" fill="#D4A090" opacity="0.55" transform="rotate(15,300,65)"/>
+    <g transform="translate(100,12)"><circle cx="0" cy="0" r="3" fill="#F0D4CB" opacity="0.8"/><circle cx="0" cy="0" r="1.4" fill="#C9897A"/></g>
+    <g transform="translate(300,68)"><circle cx="0" cy="0" r="3" fill="#F0D4CB" opacity="0.8"/><circle cx="0" cy="0" r="1.4" fill="#C9897A"/></g>
+  </svg>
+</div>
+
+<!-- ══════════════ COUNTDOWN ══════════════ -->
+<section id="countdown">
+  <div class="section-title fade-up kk">Тойымызға дейін:</div>
+  <div class="section-title fade-up ru" style="display:none">До торжества:</div>
+  <div class="countdown-wrap">
+    <div class="cd-unit">
+      <div class="cd-circle"><span class="cd-num" id="cd-days">--</span></div>
+      <span class="cd-label kk">күн</span>
+      <span class="cd-label ru" style="display:none">дней</span>
+    </div>
+    <span class="cd-sep">:</span>
+    <div class="cd-unit">
+      <div class="cd-circle"><span class="cd-num" id="cd-hours">--</span></div>
+      <span class="cd-label kk">сағат</span>
+      <span class="cd-label ru" style="display:none">часов</span>
+    </div>
+    <span class="cd-sep">:</span>
+    <div class="cd-unit">
+      <div class="cd-circle"><span class="cd-num" id="cd-mins">--</span></div>
+      <span class="cd-label kk">минут</span>
+      <span class="cd-label ru" style="display:none">минут</span>
+    </div>
+    <span class="cd-sep">:</span>
+    <div class="cd-unit">
+      <div class="cd-circle"><span class="cd-num" id="cd-secs">--</span></div>
+      <span class="cd-label kk">секунд</span>
+      <span class="cd-label ru" style="display:none">секунд</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════ RSVP FLORAL ══════════════ -->
+<div style="position:relative;overflow:visible;">
+  <svg class="floral-svg" style="left:-10px;top:0;width:80px;height:200px;" viewBox="0 0 80 200">
+    <path class="scroll-branch" d="M10,190 Q25,140 40,100 Q55,60 45,10" fill="none" stroke="#C9897A" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220"/>
+    <ellipse cx="42" cy="98" rx="6" ry="2.5" fill="#D4A090" opacity="0.65" transform="rotate(-35,42,98)"/>
+    <g class="scroll-flower" transform="translate(42,95)">
+      <circle cx="0" cy="-9" r="3" fill="#E8C4B8"/><circle cx="2.5" cy="-6.5" r="2.5" fill="#E8C4B8"/><circle cx="-2.5" cy="-6.5" r="2.5" fill="#E8C4B8"/><circle cx="2.5" cy="-11.5" r="2.5" fill="#E8C4B8"/><circle cx="-2.5" cy="-11.5" r="2.5" fill="#E8C4B8"/><circle cx="0" cy="-9" r="1.3" fill="#C9897A"/>
+    </g>
+  </svg>
+  <svg class="floral-svg" style="right:-10px;top:0;width:80px;height:200px;" viewBox="0 0 80 200">
+    <path class="scroll-branch" d="M70,190 Q55,140 40,100 Q25,60 35,10" fill="none" stroke="#C9897A" stroke-width="1.2" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220"/>
+    <ellipse cx="38" cy="98" rx="6" ry="2.5" fill="#D4A090" opacity="0.65" transform="rotate(35,38,98)"/>
+    <g class="scroll-flower" transform="translate(38,95)">
+      <circle cx="0" cy="-9" r="3" fill="#F0D4CB"/><circle cx="2.5" cy="-6.5" r="2.5" fill="#F0D4CB"/><circle cx="-2.5" cy="-6.5" r="2.5" fill="#F0D4CB"/><circle cx="2.5" cy="-11.5" r="2.5" fill="#F0D4CB"/><circle cx="-2.5" cy="-11.5" r="2.5" fill="#F0D4CB"/><circle cx="0" cy="-9" r="1.3" fill="#B06A5A"/>
+    </g>
+  </svg>
+
+  <section id="rsvp">
+    <div class="section-title fade-up kk">Сауалнама</div>
+    <div class="section-title fade-up ru" style="display:none">Анкета</div>
+    <p class="rsvp-text fade-up kk">Қатысуыңызды растауға өтініш білдіреміз</p>
+    <p class="rsvp-text fade-up ru" style="display:none">Просим подтвердить ваше присутствие</p>
+
+    <div class="rsvp-form fade-up">
+      <label class="form-label kk">Аты-жөніңізді жазыңыз</label>
+      <label class="form-label ru" style="display:none">Ваше имя</label>
+      <input type="text" class="form-input" id="rsvp-name" placeholder="Мысалы: Арман-Әлия">
+
+      <span class="options-label kk">Қатысуыңыз</span>
+      <span class="options-label ru" style="display:none">Ваш ответ</span>
+
+      <label class="radio-option">
+        <input type="radio" name="attend" value="yes">
+        <span class="radio-custom"></span>
+        <span class="radio-text kk">Әрине, келемін!</span>
+        <span class="radio-text ru" style="display:none">Конечно, приду!</span>
+      </label>
+      <label class="radio-option">
+        <input type="radio" name="attend" value="couple">
+        <span class="radio-custom"></span>
+        <span class="radio-text kk">Жұбайыммен келемін!</span>
+        <span class="radio-text ru" style="display:none">Приду с супругом/супругой!</span>
+      </label>
+      <label class="radio-option">
+        <input type="radio" name="attend" value="no">
+        <span class="radio-custom"></span>
+        <span class="radio-text kk">Өкінішке орай, келе алмаймын!</span>
+        <span class="radio-text ru" style="display:none">К сожалению, не смогу прийти!</span>
+      </label>
+
+      <button class="submit-btn kk" onclick="submitRSVP()">Жауап беру</button>
+      <button class="submit-btn ru" style="display:none" onclick="submitRSVP()">Отправить ответ</button>
+    </div>
+  </section>
+</div>
+
+<!-- ══════════════ FINAL ══════════════ -->
+<div class="section-wrap" style="position:relative;overflow:visible;">
+  <!-- Bottom large florals -->
+  <svg class="floral-svg" style="left:-20px;bottom:-20px;width:200px;height:200px;" viewBox="0 0 200 200">
+    <path class="scroll-branch" d="M10,190 Q50,140 90,100 Q130,60 150,20" fill="none" stroke="#C9897A" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="250" stroke-dashoffset="250"/>
+    <path class="scroll-branch" d="M90,100 Q110,80 140,75" fill="none" stroke="#C9897A" stroke-width="1" stroke-linecap="round" stroke-dasharray="80" stroke-dashoffset="80"/>
+    <path class="scroll-branch" d="M120,55 Q145,45 165,48" fill="none" stroke="#C9897A" stroke-width="1" stroke-linecap="round" stroke-dasharray="60" stroke-dashoffset="60"/>
+    <ellipse cx="88" cy="102" rx="9" ry="4" fill="#D4A090" opacity="0.7" transform="rotate(-40,88,102)"/>
+    <ellipse cx="148" cy="22" rx="8" ry="3.5" fill="#D4A090" opacity="0.65" transform="rotate(-60,148,22)"/>
+    <g class="scroll-flower" transform="translate(88,96)">
+      <circle cx="0" cy="-12" r="5" fill="#E8C4B8" opacity="0.9"/><circle cx="5" cy="-8.5" r="4.5" fill="#E8C4B8" opacity="0.85"/><circle cx="-5" cy="-8.5" r="4.5" fill="#E8C4B8" opacity="0.85"/><circle cx="5" cy="-15.5" r="4.5" fill="#E8C4B8" opacity="0.85"/><circle cx="-5" cy="-15.5" r="4.5" fill="#E8C4B8" opacity="0.85"/><circle cx="0" cy="-12" r="2.5" fill="#C9897A"/>
+    </g>
+    <g class="scroll-flower" transform="translate(148,16)">
+      <circle cx="0" cy="-10" r="4" fill="#F0D4CB" opacity="0.9"/><circle cx="4" cy="-7" r="3.5" fill="#F0D4CB" opacity="0.85"/><circle cx="-4" cy="-7" r="3.5" fill="#F0D4CB" opacity="0.85"/><circle cx="4" cy="-13" r="3.5" fill="#F0D4CB" opacity="0.85"/><circle cx="-4" cy="-13" r="3.5" fill="#F0D4CB" opacity="0.85"/><circle cx="0" cy="-10" r="2" fill="#B06A5A"/>
+    </g>
+    <g class="scroll-flower" transform="translate(142,74)">
+      <circle cx="0" cy="-8" r="3" fill="#E8C4B8" opacity="0.9"/><circle cx="3" cy="-5.5" r="2.5" fill="#E8C4B8" opacity="0.85"/><circle cx="-3" cy="-5.5" r="2.5" fill="#E8C4B8" opacity="0.85"/><circle cx="3" cy="-10.5" r="2.5" fill="#E8C4B8" opacity="0.85"/><circle cx="-3" cy="-10.5" r="2.5" fill="#E8C4B8" opacity="0.85"/><circle cx="0" cy="-8" r="1.4" fill="#C9897A"/>
+    </g>
+  </svg>
+  <svg class="floral-svg" style="right:-20px;bottom:-20px;width:200px;height:200px;" viewBox="0 0 200 200">
+    <path class="scroll-branch" d="M190,190 Q150,140 110,100 Q70,60 50,20" fill="none" stroke="#C9897A" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="250" stroke-dashoffset="250"/>
+    <path class="scroll-branch" d="M110,100 Q90,80 60,75" fill="none" stroke="#C9897A" stroke-width="1" stroke-linecap="round" stroke-dasharray="80" stroke-dashoffset="80"/>
+    <ellipse cx="112" cy="102" rx="9" ry="4" fill="#D4A090" opacity="0.7" transform="rotate(40,112,102)"/>
+    <g class="scroll-flower" transform="translate(112,96)">
+      <circle cx="0" cy="-12" r="5" fill="#E8C4B8" opacity="0.9"/><circle cx="5" cy="-8.5" r="4.5" fill="#E8C4B8" opacity="0.85"/><circle cx="-5" cy="-8.5" r="4.5" fill="#E8C4B8" opacity="0.85"/><circle cx="5" cy="-15.5" r="4.5" fill="#E8C4B8" opacity="0.85"/><circle cx="-5" cy="-15.5" r="4.5" fill="#E8C4B8" opacity="0.85"/><circle cx="0" cy="-12" r="2.5" fill="#C9897A"/>
+    </g>
+    <g class="scroll-flower" transform="translate(52,22)">
+      <circle cx="0" cy="-10" r="4" fill="#F0D4CB" opacity="0.9"/><circle cx="4" cy="-7" r="3.5" fill="#F0D4CB" opacity="0.85"/><circle cx="-4" cy="-7" r="3.5" fill="#F0D4CB" opacity="0.85"/><circle cx="4" cy="-13" r="3.5" fill="#F0D4CB" opacity="0.85"/><circle cx="-4" cy="-13" r="3.5" fill="#F0D4CB" opacity="0.85"/><circle cx="0" cy="-10" r="2" fill="#B06A5A"/>
+    </g>
+  </svg>
+
+  <section id="final">
+    <div class="final-glow"></div>
+    <!-- Large ornament -->
+    <svg style="width:140px;height:140px;margin:0 auto 30px;display:block;opacity:0;" id="final-ornament" viewBox="0 0 140 140">
+      <circle cx="70" cy="70" r="62" fill="none" stroke="#C9897A" stroke-width="1" opacity="0.45"/>
+      <circle cx="70" cy="70" r="48" fill="none" stroke="#C9897A" stroke-width="0.8" opacity="0.35"/>
+      <circle cx="70" cy="70" r="32" fill="none" stroke="#C9897A" stroke-width="0.6" opacity="0.3"/>
+      <path d="M70,8 Q90,39 70,70 Q50,39 70,8Z" fill="#E8C4B8" opacity="0.45"/>
+      <path d="M70,132 Q90,101 70,70 Q50,101 70,132Z" fill="#E8C4B8" opacity="0.45"/>
+      <path d="M8,70 Q39,90 70,70 Q39,50 8,70Z" fill="#E8C4B8" opacity="0.45"/>
+      <path d="M132,70 Q101,90 70,70 Q101,50 132,70Z" fill="#E8C4B8" opacity="0.45"/>
+      <path d="M70,8 Q101,39 132,70 Q101,101 70,132 Q39,101 8,70 Q39,39 70,8Z" fill="none" stroke="#C9897A" stroke-width="0.7" opacity="0.3"/>
+      <circle cx="70" cy="70" r="12" fill="#E8C4B8" opacity="0.55"/>
+      <circle cx="70" cy="70" r="6" fill="#C9897A" opacity="0.45"/>
+      <text x="70" y="74" text-anchor="middle" font-family="serif" font-size="8" fill="#6B2D3E" opacity="0.7">✦</text>
+    </svg>
+
+    <p class="final-text fade-up kk">
+      ТОЙЫМЫЗДЫҢ ҚАДІРЛІ ҚОНАҒЫ<br>БОЛЫҢЫЗДАР!
+    </p>
+    <p class="final-text fade-up ru" style="display:none">
+      БУДЬТЕ ДОРОГИМ ГОСТЕМ<br>НА НАШЕМ ТОРЖЕСТВЕ!
+    </p>
+
+    <div style="margin-top:40px;opacity:0.4;">
+      <svg width="200" height="30" viewBox="0 0 200 30">
+        <path d="M0,15 Q50,5 100,15 Q150,25 200,15" fill="none" stroke="#C9897A" stroke-width="0.8"/>
+        <circle cx="100" cy="15" r="3" fill="#E8C4B8"/>
+        <circle cx="100" cy="15" r="1.5" fill="#C9897A"/>
+      </svg>
+    </div>
+    <p style="margin-top:24px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:0.2em;color:var(--text-soft);opacity:0.5;">08.09.2026 · 19:00 · Aq Tilek Restaurant</p>
+  </section>
+</div>
+
+<!-- ══════════════ MODAL ══════════════ -->
+<div id="modal">
+  <div class="modal-box">
+    <div class="modal-icon">🌸</div>
+    <div class="modal-title kk">Рақмет!</div>
+    <div class="modal-title ru" style="display:none">Рахмет!</div>
+    <p class="modal-text kk">Жауабыңыз қабылданды.<br>Тойымызда сізбен кездесуді асыға күтеміз!</p>
+    <p class="modal-text ru" style="display:none">Ваш ответ принят.<br>С нетерпением ждём вас на нашем торжестве!</p>
+    <br>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+</div>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── HERO ANIMATIONS ──
+const tl = gsap.timeline({ delay: 0.3 });
+tl.to('#hero-name', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, 0)
+  .from('#hero-name', { y: 40 }, 0)
+  .to('.hero-event', { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, 0.5)
+  .from('.hero-event', { y: 25 }, 0.5)
+  .to('.hero-divider', { opacity: 1, scaleX: 1, duration: 0.8 }, 0.8)
+  .to('.hero-date', { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' }, 0.9)
+  .from('.hero-date', { y: 20 }, 0.9);
+
+// Hero floral branches
+const heroFloral = document.querySelectorAll('#hero .floral-svg path[id^="b"]');
+heroFloral.forEach((p, i) => {
+  const len = p.getTotalLength ? p.getTotalLength() : 200;
+  gsap.set(p, { strokeDasharray: len, strokeDashoffset: len });
+  gsap.to(p, { strokeDashoffset: 0, duration: 2 + i * 0.4, delay: 0.6 + i * 0.15, ease: 'power2.inOut' });
+});
+
+// Hero flowers & leaves
+['#f1','#f2','#f3'].forEach((id, i) => {
+  const el = document.querySelector(id);
+  if (el) {
+    gsap.set(el, { scale: 0, transformOrigin: '0px 0px' });
+    gsap.to(el, { scale: 1, duration: 0.8, delay: 1.8 + i * 0.25, ease: 'back.out(1.4)' });
+    // Wind sway
+    gsap.to(el, { rotate: 3, duration: 2 + i * 0.5, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 2.5 + i * 0.3 });
+  }
+});
+['#l1','#l2','#l3'].forEach((id, i) => {
+  const el = document.querySelector(id);
+  if (el) {
+    gsap.set(el, { scale: 0, transformOrigin: 'center center' });
+    gsap.to(el, { scale: 1, opacity: 0.7, duration: 0.7, delay: 1.5 + i * 0.2, ease: 'power2.out' });
+  }
+});
+['#bd1','#bd2'].forEach((id, i) => {
+  const el = document.querySelector(id);
+  if (el) gsap.to(el, { opacity: 0.7, duration: 0.6, delay: 2.2 + i * 0.2, ease: 'power2.out' });
+});
+
+// ── SCROLL BRANCHES ──
+document.querySelectorAll('.scroll-branch').forEach(path => {
+  const len = 500;
+  gsap.set(path, { strokeDasharray: len, strokeDashoffset: len });
+  ScrollTrigger.create({
+    trigger: path,
+    start: 'top 85%',
+    onEnter: () => gsap.to(path, { strokeDashoffset: 0, duration: 1.8, ease: 'power2.inOut' })
+  });
+});
+
+// ── SCROLL FLOWERS ──
+document.querySelectorAll('.scroll-flower').forEach((el, i) => {
+  gsap.set(el, { scale: 0, transformOrigin: '0px 0px' });
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 88%',
+    onEnter: () => {
+      gsap.to(el, { scale: 1, duration: 0.9, delay: 0.4, ease: 'back.out(1.6)' });
+      // Wind
+      gsap.to(el, { rotate: 4, duration: 2.5, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1.2 });
+    }
+  });
+});
+
+// ── FADE UP ──
+document.querySelectorAll('.fade-up').forEach(el => {
+  gsap.set(el, { opacity: 0, y: 30 });
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 88%',
+    onEnter: () => gsap.to(el, { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' })
+  });
+});
+
+// ── ORNAMENTS ──
+document.querySelectorAll('.inv-ornament').forEach(el => {
+  ScrollTrigger.create({
+    trigger: el,
+    start: 'top 88%',
+    onEnter: () => gsap.to(el, { opacity: 1, duration: 1.2, ease: 'power2.out' })
+  });
+});
+
+ScrollTrigger.create({
+  trigger: '#final-ornament',
+  start: 'top 85%',
+  onEnter: () => {
+    gsap.to('#final-ornament', { opacity: 0.75, duration: 1.2, ease: 'power2.out' });
+    gsap.to('#final-ornament', { rotate: 360, duration: 40, repeat: -1, ease: 'none' });
+  }
+});
+
+// ── COUNTDOWN ──
+const eventDate = new Date('2026-09-08T19:00:00');
+function updateCountdown() {
+  const now = new Date();
+  const diff = eventDate - now;
+  if (diff <= 0) {
+    document.getElementById('cd-days').textContent = '0';
+    document.getElementById('cd-hours').textContent = '0';
+    document.getElementById('cd-mins').textContent = '0';
+    document.getElementById('cd-secs').textContent = '0';
+    return;
+  }
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+  const secs = Math.floor((diff % 60000) / 1000);
+
+  ['days','hours','mins','secs'].forEach((id, idx) => {
+    const el = document.getElementById('cd-' + id);
+    const val = [days, hours, mins, secs][idx];
+    const str = String(val).padStart(2, '0');
+    if (el.textContent !== str) {
+      gsap.fromTo(el, { scale: 1.25, color: '#C9897A' }, { scale: 1, color: '#6B2D3E', duration: 0.35, ease: 'power2.out' });
+      el.textContent = str;
+    }
+  });
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ── LANG ──
+let currentLang = 'kk';
+function setLang(lang) {
+  currentLang = lang;
+  document.querySelectorAll('.kk').forEach(el => el.style.display = lang === 'kk' ? '' : 'none');
+  document.querySelectorAll('.ru').forEach(el => el.style.display = lang === 'ru' ? '' : 'none');
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+}
+
+// ── MUSIC ──
+let playing = false;
+const audio = document.getElementById('bg-music');
+const icon = document.getElementById('music-icon');
+const label = document.getElementById('music-label');
+function toggleMusic() {
+  if (!playing) {
+    audio.play().catch(() => {});
+    icon.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1" fill="#C9897A"/><rect x="14" y="4" width="4" height="16" rx="1" fill="#C9897A"/>';
+    label.textContent = 'Тоқтату';
+    playing = true;
+  } else {
+    audio.pause();
+    icon.innerHTML = '<polygon points="5,3 19,12 5,21" fill="#C9897A" stroke="none"/>';
+    label.textContent = 'Қосу';
+    playing = false;
+  }
+}
+
+// ── RSVP ──
+function submitRSVP() {
+  const name = document.getElementById('rsvp-name').value.trim();
+  const attend = document.querySelector('input[name="attend"]:checked');
+  if (!name || !attend) {
+    gsap.fromTo('#rsvp .rsvp-form', { x: -6 }, { x: 0, duration: 0.5, ease: 'elastic.out(1,0.3)' });
+    return;
+  }
+  document.getElementById('modal').classList.add('show');
+  gsap.fromTo('.modal-box', { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: 'back.out(1.4)' });
+}
+function closeModal() {
+  gsap.to('.modal-box', { scale: 0.9, opacity: 0, duration: 0.3, onComplete: () => {
+    document.getElementById('modal').classList.remove('show');
+  }});
+}
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── WIND ON HERO FLOWERS ──
+// Additional right-side hero flowers
+document.querySelectorAll('#hero .floral-svg g[id^="f"], #hero .floral-svg g').forEach((el, i) => {
+  if (el.id && el.id.startsWith('f')) {
+    gsap.to(el, { rotate: '+=4', duration: 2.2 + i * 0.3, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: i * 0.5 });
+  }
+});
+</script>
+</body>
+</html>
